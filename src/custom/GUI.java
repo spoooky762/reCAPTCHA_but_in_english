@@ -51,7 +51,7 @@ import recon.IHandler;
 public class GUI extends JFrame {
 
 	private static final long serialVersionUID = 1L;
-	private String github = "https://github.com/bit4woo/reCAPTCHA";
+	private String github = "https://github.com/spoooky762/reCAPTCHA_but_in_english";
 	private String helpurl = github;
 
 
@@ -215,7 +215,7 @@ public class GUI extends JFrame {
 		btnRequestAPI = new JButton("Get Answer");
 		btnRequestAPI.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				//				//GUI依然会被卡住
+				//				//GUI will still be stuck
 				//				SwingUtilities.invokeLater(new Runnable()
 				//				{
 				//					public void run()
@@ -407,7 +407,7 @@ public class GUI extends JFrame {
 	}
 
 	/**
-	 * 从jar包中获取某个package中的类名称
+	 * Get the class name in a package from the jar package
 	 * @param packageName
 	 * @return
 	 */
