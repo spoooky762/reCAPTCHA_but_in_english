@@ -32,8 +32,8 @@ IIntruderPayloadGeneratorFactory,IIntruderPayloadGenerator,IExtensionStateListen
 		flushStd();
 		stdout.println(Info.getFullExtensionName());
 		stdout.println(Info.github);
-		callbacks.setExtensionName(Info.getFullExtensionName()); //插件名称
-		//callbacks.registerHttpListener(this); //如果没有注册，下面的processHttpMessage方法是不会生效的。处理请求和响应包的插件，这个应该是必要的
+		callbacks.setExtensionName(Info.getFullExtensionName()); //Plugin name
+//callbacks.registerHttpListener(this); //If there is no registration, the following processHttpMessage method will not take effect. Plugins for handling request and response packages, this should be necessary
 		callbacks.registerContextMenuFactory(this);
 		callbacks.registerIntruderPayloadGeneratorFactory(this);
 		callbacks.addSuiteTab(BurpExtender.this);
@@ -52,7 +52,7 @@ IIntruderPayloadGeneratorFactory,IIntruderPayloadGenerator,IExtensionStateListen
 		}
 	}
 
-	/////////////////////////////////////////自定义函数/////////////////////////////////////////////////////////////
+	/////////////////////////////////////////Custom functions/////////////////////////////////////////////////////////////
 	public static IBurpExtenderCallbacks getCallbacks() {
 		return callbacks;
 	}
@@ -87,13 +87,11 @@ IIntruderPayloadGeneratorFactory,IIntruderPayloadGenerator,IExtensionStateListen
 		}
 	}
 
-	///////////////////////////////////自定义函数////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////Custom functions////////////////////////////////////////////////
 
+/////////////////////////////////////////The following are the necessary methods for burp --start////////////////
 
-	///////////////////////////////////以下是各种burp必须的方法 --start//////////////////////////////////////////
-
-
-	//ITab必须实现的两个方法
+	//Two methods that ITab must implement
 	@Override
 	public String getTabCaption() {
 		return ("reCAPTCHA");
@@ -108,7 +106,7 @@ IIntruderPayloadGeneratorFactory,IIntruderPayloadGenerator,IExtensionStateListen
 
 	@Override
 	public List<JMenuItem> createMenuItems(IContextMenuInvocation invocation)
-	{ //需要在签名注册！！callbacks.registerContextMenuFactory(this);
+	{ //Register with signature! ! callbacks.registerContextMenuFactory(this);
 		IHttpRequestResponse[] messages = invocation.getSelectedMessages();
 		List<JMenuItem> list = new ArrayList<JMenuItem>();
 		if((messages != null) && (messages.length ==1))
@@ -142,12 +140,12 @@ IIntruderPayloadGeneratorFactory,IIntruderPayloadGenerator,IExtensionStateListen
 	}
 	
 	public static void showMessage() {
-		imgRequestRaws.setText(new String(config.getRequestBytes())); //在GUI中显示这个请求信息。
+		imgRequestRaws.setText(new String(config.getRequestBytes())); //Show this request information in the GUI.
 		imgHttpService.setText(config.getHttpService().toString());
 	}
 
 
-	//IIntruderPayloadGeneratorFactory 所需实现的2个函数
+	//IIintruderPayloadGeneratorFactory 2 functions required to implement
 	@Override
 	public String getGeneratorName() {
 		return "reCAPTCHA";
@@ -160,7 +158,7 @@ IIntruderPayloadGeneratorFactory,IIntruderPayloadGenerator,IExtensionStateListen
 	}
 
 
-	//IIntruderPayloadGenerator 所需实现的三个函数
+	//IIIntruderPayloadGenerator three functions required to implement
 	@Override
 	public boolean hasMorePayloads() {
 		return true;
@@ -168,21 +166,22 @@ IIntruderPayloadGeneratorFactory,IIntruderPayloadGenerator,IExtensionStateListen
 
 	@Override
 	public byte[] getNextPayload(byte[] baseValue) {
-		// 获取图片验证码的值
+		// Get the value of the image verification code
 		int times = 0;
 		while(times <=5) {
 			if (config!=null) {
-				try {					
-					//String imgpath = imageDownloader.download(callbacks, helpers, imgMessageInfo.getHttpService(), imgMessageInfo.getRequest());
-					String imgpath = BurpExtender.getImage(config);
-					String code = getAnswer(imgpath).trim();//验证码trim一下应该不会有问题
-					stdout.println(imgpath+" ---- "+code);
-					return code.getBytes();
-				} catch (Exception e) {
-					e.printStackTrace(stderr);
-					return e.getMessage().getBytes();
-				}
-			}else {
+				try {	
+					
+				//String imgpath = imageDownloader.download(callbacks, helpers, imgMessageInfo.getHttpService(), imgMessageInfo.getRequest());
+				String imgpath = BurpExtender.getImage(config);
+				String code = getAnswer(imgpath).trim(); //The verification code trim should not have any problems
+				stdout.println(imgpath+" --- "+code);
+				return code.getBytes();
+			} catch (Exception e) {
+				e.printStackTrace(stderr);
+				return e.getMessage().getBytes();
+			}
+		}else {
 				stdout.println("Failed try!!! please send image request to reCAPTCHA first!");
 				times +=1;
 				continue;
@@ -190,7 +189,7 @@ IIntruderPayloadGeneratorFactory,IIntruderPayloadGenerator,IExtensionStateListen
 		}
 		return null;
 	}
-
+	
 	@Override
 	public void reset() {
 
@@ -203,5 +202,5 @@ IIntruderPayloadGeneratorFactory,IIntruderPayloadGenerator,IExtensionStateListen
 		config.saveConfigToBurp();
 	}
 
-	//////////////////////////////////////////////各种burp必须的方法 --end//////////////////////////////////////////////////////////////
+	////////////////////////////////////////////// Various burp-essential methods --end//////////////////////////////////////////////////////////////
 }
